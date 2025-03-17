@@ -1,0 +1,15 @@
+# Ignore environment variables
+.env
+
+# Ignore extracted agreement text files (if caching locally)
+extracted_text/
+pr1.1/
+aienv/
+assets/
+*.txt
+
+# Ignore system and Python-related files
+__pycache__/
+*.pyc
+*.pyo
+.DS_Store
