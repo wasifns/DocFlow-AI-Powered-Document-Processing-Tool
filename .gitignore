@@ -1,2 +1,20 @@
+<<<<<<< HEAD
 .env
 __pycache__/
+=======
+# Ignore environment variables
+.env
+
+# Ignore extracted agreement text files (if caching locally)
+extracted_text/
+pr1.1/
+aienv/
+assets/
+*.txt
+
+# Ignore system and Python-related files
+__pycache__/
+*.pyc
+*.pyo
+.DS_Store
+>>>>>>> 1b1fb2f9b28980ee2a2f51561f098636f9f7a4c3
