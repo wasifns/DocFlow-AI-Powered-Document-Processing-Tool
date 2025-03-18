@@ -1,3 +1,10 @@
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+.env
+__pycache__/
+=======
+>>>>>>> PR1.1
 # Ignore environment variables
 .env
 
@@ -13,5 +20,9 @@ __pycache__/
 *.pyc
 *.pyo
 .DS_Store
+<<<<<<< HEAD
 test.py
 test1.py
+=======
+>>>>>>> 1b1fb2f9b28980ee2a2f51561f098636f9f7a4c3
+>>>>>>> PR1.1
