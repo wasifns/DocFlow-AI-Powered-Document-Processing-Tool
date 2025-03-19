@@ -16,9 +16,9 @@ def save_extracted_text(agreement_id, text):
     """ Save extracted text persistently in json file """
     if os.path.exists(JSON_FILE):
         with open(JSON_FILE, 'r') as f:
-            extracted_data = json.load(f)
+            extracted_data = json.load(f) # Load JSON file 
     else:
-        extracted_data = {}
+        extracted_data = {} # if JSON file not already exists
     extracted_data[agreement_id] = text #add/update the extracted text
     with open(JSON_FILE, 'w') as f:
         json.dump(extracted_data, f, indent=4)
@@ -63,7 +63,7 @@ def process_multiple_pdfs(folder_path):
         agreement_name, _ = os.path.splitext(pdf_file)  # Extract name without .pdf
         agreement_id = generate_agreement_id(agreement_name)
         
-        extracted_text = read_pdf_ocr(pdf_path,agreement_id)
+        extracted_text = read_pdf_ocr(pdf_path,agreement_id) # Save text to respective agreement id
         
         if extracted_text:
             print(f"✅ Successfully processed: {pdf_file}")
