@@ -1,4 +1,20 @@
+import os
+import json 
 import re
+
+def get_extracted_text(agreement_id):
+    json_file = "extracted_data.json"
+
+    # Load extracted data if the file exists
+    if os.path.exists(json_file):
+        with open(json_file, 'r') as f:
+            extracted_data = json.load(f)
+        
+        # Return content if file exists
+        if agreement_id in extracted_data:
+            return extracted_data[agreement_id]
+        
+    return None # If file not found 
 
 def extract_information(agreement_text, query):
     """Extract specific information from an agreement text using keyword lookup."""
