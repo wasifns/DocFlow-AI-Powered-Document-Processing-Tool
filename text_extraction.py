@@ -65,6 +65,7 @@ def process_multiple_pdfs(folder_path):
         
         extracted_text = read_pdf_ocr(pdf_path,agreement_id) # Save text to respective agreement id
         
+        
         if extracted_text:
             print(f"✅ Successfully processed: {pdf_file}")
         else:

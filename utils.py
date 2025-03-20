@@ -8,9 +8,9 @@ from config import agent  # Import the AI agent
 from text_extraction import generate_agreement_id
 JSON_FILE = "extracted_data.json"
 
-def process_multiple_pdfs(folder_path):
+def process_multiple_pdfs(folder_path, JSON_FILE):
     """ Processes multiple PDFs in a folder, extracts text, and saves it in JSON storage. """
-    agreement_data = load_data() # Checks existing json data
+    agreement_data = load_data(JSON_FILE) # Checks existing json data
 
     for filename in os.listdir(folder_path):
         if filename.endswith(".pdf"):
@@ -22,11 +22,13 @@ def process_multiple_pdfs(folder_path):
                 continue # Avoid reprocessing
             
             extracted_text = extract_text_from_pdf(pdf_path)
+            print(f"📄 Extracted text for {filename} (ID: {agreement_id}):\n{extracted_text[:200]}...")  # Print preview
+
             if extracted_text:
                 agreement_data[agreement_id] = extracted_text
                 print(f"✅ Extracted text saved for {filename}")
                 
-    save_data(agreement_data)
+    save_data(agreement_data, JSON_FILE)
 
 def extract_text_from_pdf(pdf_path):
     """
@@ -40,7 +42,7 @@ def extract_text_from_pdf(pdf_path):
 
     return extracted_text.strip()
 
-def load_data():
+def load_data(JSON_FILE):
     """Load extracted text form JSON storage"""
     if os.path.exists(JSON_FILE):
         with open(JSON_FILE, 'r', encoding='utf-8') as f:
@@ -57,7 +59,7 @@ def ask_question(agreements_data, agreement_id, query):
     response = agent.run(f"Context: {document_text}\n\nQuestion: {query}")
     return response.content if response else "No response generated."
 
-def save_data(data):
+def save_data(data, JSON_FILE):
     """Save extracted text to JSON storage"""
     with open(JSON_FILE,'w', encoding = "utf-8") as f:
         json.dump(data, f, indent=4) # Save updated json data
