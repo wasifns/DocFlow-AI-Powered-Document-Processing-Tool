@@ -9,6 +9,7 @@ __pycache__/
 .env
 
 # Ignore extracted agreement text files (if caching locally)
+extracted_data.json
 extracted_text/
 pr1.1/
 aienv/

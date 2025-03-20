@@ -2,28 +2,33 @@ import os
 import json
 import hashlib
 import pytesseract
-from pdf2image import convert_from_path
 from PIL import Image
+from pdf2image import convert_from_path
 from config import agent  # Import the AI agent
+from text_extraction import generate_agreement_id
+JSON_FILE = "extracted_data.json"
 
-def process_multiple_pdfs(folder_path, extracted_text_folder):
-    """
-    Processes multiple PDFs in a folder, extracts text, and saves it as .txt files.
-    """
+def process_multiple_pdfs(folder_path, JSON_FILE):
+    """ Processes multiple PDFs in a folder, extracts text, and saves it in JSON storage. """
+    agreement_data = load_data(JSON_FILE) # Checks existing json data
+
     for filename in os.listdir(folder_path):
         if filename.endswith(".pdf"):
             pdf_path = os.path.join(folder_path, filename)
+            agreement_id = generate_agreement_id(filename)
+
+            if agreement_id in agreement_data:
+                print(f"✅ Skipping {filename}, already extracted.")
+                continue # Avoid reprocessing
+            
             extracted_text = extract_text_from_pdf(pdf_path)
+            print(f"📄 Extracted text for {filename} (ID: {agreement_id}):\n{extracted_text[:200]}...")  # Print preview
 
-            # Create a unique filename using a hash
-            file_hash = hashlib.md5(pdf_path.encode()).hexdigest()[:8]
-            text_filename = f"AG_{filename.replace('.pdf', '')}_{file_hash}.txt"
-            text_file_path = os.path.join(extracted_text_folder, text_filename)
-
-            with open(text_file_path, "w", encoding="utf-8") as f:
-                f.write(extracted_text)
-
-            print(f"Extracted text saved: {text_file_path}")
+            if extracted_text:
+                agreement_data[agreement_id] = extracted_text
+                print(f"✅ Extracted text saved for {filename}")
+                
+    save_data(agreement_data, JSON_FILE)
 
 def extract_text_from_pdf(pdf_path):
     """
@@ -37,30 +42,24 @@ def extract_text_from_pdf(pdf_path):
 
     return extracted_text.strip()
 
-def load_extracted_text(extracted_text_folder):
-    """
-    Loads extracted text from the folder into a dictionary.
-    """
-    agreements_data = {}
-
-    for filename in os.listdir(extracted_text_folder):
-        if filename.endswith(".txt"):
-            file_path = os.path.join(extracted_text_folder, filename)
-            with open(file_path, "r", encoding="utf-8") as f:
-                agreements_data[filename] = f.read()
-
-    return agreements_data
-
+def load_data(JSON_FILE):
+    """Load extracted text form JSON storage"""
+    if os.path.exists(JSON_FILE):
+        with open(JSON_FILE, 'r', encoding='utf-8') as f:
+            return json.load(f) # load and return Json data
+    else:
+        return {} # Return Empyt dict
+    
 def ask_question(agreements_data, agreement_id, query):
-    """
-    Uses the AI agent to answer queries about a specific agreement.
-    """
+    """ Uses the AI agent to answer queries about a specific agreement."""
     if agreement_id not in agreements_data:
         return "Invalid Agreement ID. Try again."
 
     document_text = agreements_data[agreement_id]
     response = agent.run(f"Context: {document_text}\n\nQuestion: {query}")
-    # print(response)  # Debugging: See what response contains
-    # print(dir(response))  # See available attributes and methods
-
     return response.content if response else "No response generated."
+
+def save_data(data, JSON_FILE):
+    """Save extracted text to JSON storage"""
+    with open(JSON_FILE,'w', encoding = "utf-8") as f:
+        json.dump(data, f, indent=4) # Save updated json data
