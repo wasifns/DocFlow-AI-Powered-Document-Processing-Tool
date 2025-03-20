@@ -21,13 +21,23 @@ if os.path.isdir(folder_path):
         exit()
 
     # Querying loop
+    last_agreement_id = None
     while True:
-        agreement_id = input("Enter Agreement ID to query (or type 'exit' to quit): ").strip()
+        if last_agreement_id:
+            agreement_id = input(f"Press Enter to use {last_agreement_id} or New Enter Agreement ID to query (or type 'exit' to quit): ").strip()
+        else:
+            agreement_id = input("Enter Agreement ID to query (or type 'exit' to quit): ").strip()
         if agreement_id.lower() == "exit":
             break
+        elif agreement_id:
+            last_agreement_id = agreement_id
+
+        if not last_agreement_id:
+            print("No Agreement ID selected. Please enter an ID.")
+            continue  # Ask again if no ID is available
         
         query = input("Ask a question about the agreement:\n").strip()
-        response = ask_question(agreements_data, agreement_id, query)   
+        response = ask_question(agreements_data, last_agreement_id, query)   
         print("\nResponse:\n", response)
 
 else:
