@@ -13,6 +13,7 @@ extracted_data.json
 extracted_text/
 pr1.1/
 aienv/
+venv/
 assets/
 *.txt
 

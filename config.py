@@ -1,4 +1,5 @@
 from agno.agent import Agent
+from google import genai
 from agno.models.google import Gemini
 from dotenv import load_dotenv
 
