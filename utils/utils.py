@@ -5,7 +5,7 @@ import pytesseract
 from PIL import Image
 from pdf2image import convert_from_path
 from config import agent  # Import the AI agent
-from text_extraction import generate_agreement_id
+from src.extractions.text_extraction import generate_agreement_id
 JSON_FILE = "extracted_data.json"
 
 def process_multiple_pdfs(folder_path, JSON_FILE):
@@ -22,7 +22,7 @@ def process_multiple_pdfs(folder_path, JSON_FILE):
                 continue # Avoid reprocessing
             
             extracted_text = extract_text_from_pdf(pdf_path)
-            print(f"📄 Extracted text for {filename} (ID: {agreement_id}):\n{extracted_text[:200]}...")  # Print preview
+            # print(f"📄 Extracted text for {filename} (ID: {agreement_id}):\n{extracted_text[:200]}...")  # Print preview
 
             if extracted_text:
                 agreement_data[agreement_id] = extracted_text

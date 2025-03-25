@@ -1,6 +1,6 @@
 import os
 from config import agent  # Import the AI agent from config.py
-from utils import process_multiple_pdfs, load_data, ask_question, save_data
+from utils.utils import process_multiple_pdfs, load_data, ask_question, save_data
 
 
 # Get folder path from user
